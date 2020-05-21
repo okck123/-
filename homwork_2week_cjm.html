@@ -32,7 +32,40 @@
     </style>
     <script>
         function success(){
-            alert('주문이 완료되었습니다.');
+            let UsernameText = $('#Username').val();
+            let Count = $('#inputGroupSelect01').val();
+            let AddressText = $('#Address').val();
+            let PhonenumberText = $('#Phonenumber').val();
+
+            if(UsernameText == ''){
+                alert('이름을 입력해 주세요');
+            }
+            else if(Count == '-- 수량을 선택하세요 --'){
+                alert('수량을 입력해 주세요');
+            }
+            else if(AddressText==''){
+                alert('주소를 입력해 주세요');
+            }
+            else if(PhonenumberText==''){
+                alert('휴대폰 번호를 입력해주세요');
+            }
+            else if(PhonenumberText!=''){
+                alert('여기로 넘어옹ㅁ');
+                //형식 010-0000-0000 이 아니면 무조건 에러표시 해야함
+                //간단하게 010-은 고정 뒤에 하이픈 자리도 고정이라고 설정한다면
+                // [0]~[3] 과 [8]의 값은 고정적이다
+                // [4]~[7],[9]~[12] 에는 숫자만 입력하여야 한다.
+                // 해당 자리의 char값이 숫자인지 아닌지 판별하거나
+                // SubString으로 하나하나 for문으로 0~9까지 돌리는 방법 2가지가 있겠다.
+                if(PhonenumberText.length()<12){
+                    alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요');
+                }
+            }
+            //alert(UsernameText +' '+ Count +' ' + AddressText+' ' + PhonenumberText);
+            
+            else{
+                alert('주문이 완료되었습니다.');
+            }
         }
     </script>
 </head>
@@ -58,7 +91,7 @@
                 <span class="input-group-text" id="basic-addon1">주문자 이름</span>
             </div>
             <input type="text" class="form-control" placeholder="" aria-label="Username"
-                aria-describedby="basic-addon1">
+                aria-describedby="basic-addon1" id="Username">
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -76,14 +109,14 @@
                 <span class="input-group-text" id="basic-addon2">주소</span>
             </div>
             <input type="text" class="form-control" placeholder="" aria-label="Address"
-                aria-describedby="basic-addon2">
+                aria-describedby="basic-addon2" id="Address">
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">전화번호</span>
             </div>
             <input type="text" class="form-control" placeholder="" aria-label="Phonenumber"
-                aria-describedby="basic-addon3">
+                aria-describedby="basic-addon3" id="Phonenumber">
         </div>
         <div class = "productbtn">
             <button onclick="success()" type="submit" class="btn btn-primary" style=" margin: auto;">주문하기</button>
