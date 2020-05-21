@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <title>스파르타코딩클럽 | 부트스트랩 연습하기</title>
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .myitem {
+            background-image: url('https://cdn.nongupin.co.kr/news/photo/201905/63937_42522_2637.jpg');
+            background-position: center;
+            background-size: cover;
+
+            width: 500px;
+            height: 350px;
+        }
+
+        .price {
+            font-size: 16px;
+        }
+
+        .description-box {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .order-box {
+            width: 500px;
+        }
+
+        .btn-box {
+            width: 500px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .wrap {
+            width: 500px;
+            margin: auto;
+        }
+
+        .dollar {
+            color: blue;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        function isCelluar(asValue) {
+            var regExp = /^01(?:0|1|[6-9])-(?:\d{3}|\d{4})-\d{4}$/;
+            return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+
+        }
+
+        $(document).ready(function(){
+            $.ajax({
+                type: "GET",
+                url: 'https://api.manana.kr/exchange/rate.json',
+                data:{},
+                success:function(response){
+                    let rate = response[1]['rate'];
+                    $('#wd').text(rate);
+                }
+            })
+        });
+
+        function numberMaxLength(e){
+            if(e.value.length>e.maxLength){
+                e.value = e.value.slice(0,e.maxLength);
+            }
+        }
+
+        function order() {
+            //정규식 사용해서 핸드폰 번호 체크 해보자
+            // input type number와 maxlength를 이용해서 핸드폰 번호 체크하기 (하이픈 없는 버전)
+            let name = $('#name').val();
+            let count = $('#count').val();
+            let address = $('#address').val();
+            let phone = $('#phone').val();
+
+            if (name == '') {
+                alert('이름을 입력하세요.');
+            }
+            else if (count == '-- 수량을 선택하세요 --') {
+                alert('수량을 입력하세요');
+            }
+            else if (address == '') {
+                alert('주소를 입력하세요');
+            }
+            // else if (isCelluar(phone)==false){
+            //     alert('휴대폰번호 입력 형식이 틀립니다.\n010-0000-0000으로 입력해주세요.')
+            // }
+            else if(phone.length<11){
+                alert('휴대폰 번호를 정확히 입력해주세요.');
+            }
+            else{
+                alert('주문이 완료되었습니다.'); 
+            }
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="myitem"></div>
+        <div class="description-box">
+            <h1>해바라기를 팝니다 <span class="price">가격: 10,000원/개</span></h1>
+            <p>이 해바라기는 신비한 힘을 가지고 있습니다.</p>
+        </div>
+        <div class="dollar">환율: <span id="wd">1000</span>원/달러</div>
+        <div class="order-box">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">주문자성함</span>
+                </div>
+                <input type="text" class="form-control" id="name" aria-describedby="basic-addon3">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">수량</label>
+                </div>
+                <select class="custom-select" id="count">
+                    <option selected>-- 수량을 선택하세요 --</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">주소</span>
+                </div>
+                <input type="text" class="form-control" id="address" aria-describedby="basic-addon3">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">전화번호</span>
+                </div>
+                <!-- <input type="text" class="form-control" id="phone" aria-describedby="basic-addon3"> -->
+                <input type="number" class="form-control" id="phone" aria-describedby="basic-addon3" maxlength="11" oninput="numberMaxLength(this)">
+            </div>
+        </div>
+        <div class="btn-box">
+            <button onclick="order()" type="button" class="btn btn-primary">주문하기</button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">이름</th>
+                    <th scope="col">수량</th>
+                    <th scope="col">전화번호</th>
+                    <th scope="col">주소</th>
+                </tr>
+            </thead>
+            <tbody id="order-box">
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

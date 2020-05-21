@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- JQuery를 import 합니다 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>1주차 숙제</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .wrap {
+            margin: auto;
+            width: 50%;
+        }
+
+        .productimg {
+            margin-bottom: 20px;
+        }
+        .USD-KRW{
+            color:blue;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET", // GET 방식으로 요청한다.
+                url: "https://api.manana.kr/exchange/rate.json",
+                data: {}, // 요청하면서 함께 줄 데이터 (GET 요청시엔 비워두세요)
+                success: function (response) { // 서버에서 준 결과를 response라는 변수에 담음
+                    //환율 text값
+                    //console.log(response[0]['rate']) // 서버에서 준 결과를 이용해서 나머지 코드를 작성
+                    $('#USD-KRW').append('달러-원 환율:'+ response[1]['rate']);
+                }
+            })
+        });
+        function success() {
+            let UsernameText = $('#Username').val();
+            let Count = $('#inputGroupSelect01').val();
+            let AddressText = $('#Address').val();
+            let PhonenumberText = $('#Phonenumber').val();
+            if (UsernameText == '') {
+                alert('이름을 입력해 주세요');
+            }
+            else if (Count == '-- 수량을 선택하세요 --') {
+                alert('수량을 입력해 주세요');
+            }
+            else if (AddressText == '') {
+                alert('주소를 입력해 주세요');
+            }
+            else if (PhonenumberText == '') {
+                alert('휴대폰 번호를 입력해주세요');
+            }
+            else if (PhonenumberText != '') {
+                //형식 010-0000-0000 이 아니면 무조건 에러표시 해야함
+                //간단하게 010-은 고정 뒤에 하이픈 자리도 고정이라고 설정한다면
+                // [0]~[3] 과 [8]의 값은 고정적이다
+                // [4]~[7],[9]~[12] 에는 숫자만 입력하여야 한다.
+                // 해당 자리의 char값이 숫자인지 아닌지 판별하거나
+                // SubString으로 하나하나 for문으로 0~9까지 돌리는 방법 2가지가 있겠다.
+                // 1. 휴대폰 번호의 자리는 13자리 (하이픈 포함) 따라서 자리수가 13자리 이하면 형식에 맞지 않는다.
+                let indexCheck0to3 = PhonenumberText[0] + PhonenumberText[1] + PhonenumberText[2] + PhonenumberText[3];
+                let indexCheck8 = PhonenumberText[8];
+
+                if (PhonenumberText.length != 13) {
+                    alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요');
+                }
+                // 2. index[0]~[3] 과 [8] 은 고정값이다 010- / - 따라서 해당자리에 값이 010-,- 이 아니라면 형식에 맞지 않는다.
+                else if (indexCheck0to3 != '010-' || indexCheck8 != '-') {
+                    alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요');
+                }
+                else {
+                    let LastindexCheckCnt = 0;
+                    // 3. 나머지 자리가 숫자인지 문자인지 판별하기
+                    for (let i = 4; i < PhonenumberText.length; i++) {
+                        if (i == 8) { continue; }
+                        let indexCheckCnt = 0;
+                        for (let j = 0; j < 10; j++) {
+                            if (parseInt(PhonenumberText[i], 10) != j) {
+                                indexCheckCnt++;
+                            }
+                        }
+                        if (indexCheckCnt == 10) {
+                            alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요');
+                            break
+                        }
+                        LastindexCheckCnt++;
+                    }
+                    // 4. 모두 정상적으로 입력 되었을때 완료 표시하기
+                    if (LastindexCheckCnt == 8) {
+                        alert('주문이 완료 되었습니다.');
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="wrap">
+        <div class="productimg">
+            <img src="http://item.ssgcdn.com/54/92/84/item/1000025849254_i1_250.jpg" width="100%" height="300px">
+        </div>
+        <div class="productdescription">
+            <div>
+                <h2 style="display: inline;">칠리새우 400g</h2>
+                <h5 style="display: inline;">가격: 6,280원/개</h5>
+            </div>
+            <h5>탱글탱글 새우 살이 씹는 즐거움을 주고 매콤하고 달콤한 맛의 소스가 감칠맛을 더해주어 한 번 먹으면 손을 멈추고 싶지 않아지는 칠리 새우입니다. 새우는 냉동상태 그대로 170-180도로
+                가열한 식용유에 튀기면 끝! 칠리소스는 해동 후 새우에 곁들이면 맛있는 한 접시가 완성됩니다. 오늘의 별미 반찬으로도 좋고 간단한 안주로도 아이들 간식으로도 좋은 칠리새우를 만나보세요!
+
+            </h5>
+        </div>
+        <div class="USD-KRW">
+            <p id="USD-KRW"></p>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">주문자 이름</span>
+            </div>
+            <input type="text" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1"
+                id="Username">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">수량</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01">
+                <option selected>-- 수량을 선택하세요 --</option>
+                <option value="1">1개</option>
+                <option value="2">2개</option>
+                <option value="3">3개</option>
+            </select>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon2">주소</span>
+            </div>
+            <input type="text" class="form-control" placeholder="" aria-label="Address" aria-describedby="basic-addon2"
+                id="Address">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">전화번호</span>
+            </div>
+            <input type="text" class="form-control" placeholder="" aria-label="Phonenumber"
+                aria-describedby="basic-addon3" id="Phonenumber">
+        </div>
+        <div class="productbtn">
+            <button onclick="success()" type="submit" class="btn btn-primary"
+                style="display : block; margin: auto;">주문하기</button>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
