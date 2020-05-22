@@ -16,15 +16,22 @@ soup = BeautifulSoup(data.text, 'html.parser')
 #body-content > div.newest-list > div > table > tbody > tr:nth-child(1) > td.info > a.artist.ellipsis
 
 #tbody불러오기
-musics = soup.select('#body-content > div.newest-list > div > table > tbody')
-# print(musics)
-cnt = 1
-for music in musics:
+musics = soup.select('#body-content > div.newest-list > div > table > tbody > tr')
+#print(musics)
+#for music in musics:
     # 1번은 되는데 전체값에서는 text가 안먹혀서 전체값을 불러오기가 안됌
-    rank = music.select('td.number')
-    title = music.select('td.info > a.title.ellipsis')
-    artist = music.select('td.info > a.artist.ellipsis')
-    # rank = music.select_one('td.number').text.slice[0]
-    # title = music.select_one('td.info > a.title.ellipsis').text.strip()
-    # artist = music.select_one('td.info > a.artist.ellipsis').text
+    # musics = soup.select('#body-content > div.newest-list > div > table > tbody > tr')
+    # 여기서 tr 을 추가 안해줘서 1번만 적용되서 다 안나온것이였음..
+    #rank = music.select('td.number')
+    #title = music.select('td.info > a.title.ellipsis')
+    #artist = music.select('td.info > a.artist.ellipsis')
+    #rank = music.select_one('td.number').text.split()[0]
+    #title = music.select_one('td.info > a.title.ellipsis').text.strip()
+    #artist = music.select_one('td.info > a.artist.ellipsis').text
+    #print(rank,title,artist)
+
+for music in musics:
+    rank = music.select_one('td.number').text.split()[0]
+    title = music.select_one('td.info > a.title.ellipsis').text.strip()
+    artist = music.select_one('td.info > a.artist.ellipsis').text
     print(rank,title,artist)
