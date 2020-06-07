@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>당신의 투자금은 안녕하십니까?</title>
+
+    <script>
+
+        $(document).ready(function () {
+            tabledataview();
+        });
+
+        //유닛계산
+        function unitCalc() {
+            let getname = $('#namecode').val();
+            let getinvestment = $('#investment').val();
+
+            let getcode = findinvest(getname);
+
+        }
+        //저장된 데이터 출력
+        function tabledataview() {
+
+        }
+        //검색한 데이터 저장
+        function savedata() {
+
+        }
+        //주식이름,코드로 주식 찾기 return값은 결국 코드값으로 주자
+        //인터넷검색으로 찾지말고 excel파일 받아서 서버에 저장후 이걸 사용하자
+        //우선주검색이 안됨
+        function findinvest(namecode) {
+            let investcode = '005935';
+            $.ajax({
+                type: "GET",
+                url: "/search",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let codename = response['codename'];
+                        alert(codename)
+                    }
+                }
+            })
+            
+            return investcode;
+        }
+    </script>
+    <style>
+        .wrap {
+            width: 900px;
+            margin: auto;
+        }
+
+        #table {
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4 text-center">당신의 투자금은 안녕하십니까?</h1>
+                <hr class="my-4">
+                <p class="lead text-left">적절한 투자금 분배는 당신의 투자에 도움이 됩니다.</p>
+                <p class="lead text-left">종목과 투자금만 입력하세요!</p>
+                <p class="lead text-left">해당 종목의 1회당 적정 거래량을 자동으로 계산해 드립니다.</p>
+                <p class="lead text-left">정확한 검색을 위해 종목이름 전체를 입력해주세요.</p>
+                <p class="lead text-left">ex) 삼성전자우 검색시 삼성전자(x) 삼성전자우(o)</p>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">종목이름</span>
+            </div>
+            <input type="text" class="form-control" id="namecode" placeholder="삼성전자" aria-label="삼성전자"
+                aria-describedby="namecode">
+                <button type="button" onclick="findinvest()" class="btn btn-primary">검색</button>
+            <div class="input-group-prepend">
+                <span class="input-group-text">투자금</span>
+            </div>
+            <input type="text" class="form-control" id="investment" placeholder="1,000,000" aria-label="1,000,000"
+                aria-describedby="investment">
+                <button type="button" onclick="unitCalc()" class="btn btn-primary">결과확인</button>
+            
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="">1유닛[원/주]</span>
+            </div>
+            <input type="text" class="form-control text-right" placeholder="원" aria-label="원"
+                aria-describedby="basic-addon2">
+            <input type="text" class="form-control text-right" placeholder="주" aria-label="주"
+                aria-describedby="basic-addon2">
+        </div>
+
+        <table class="table" id="table">
+            <thead>
+                <tr>
+                    <th scope="col">날짜</th>
+                    <th scope="col">종목이름/코드</th>
+                    <th scope="col">투자금</th>
+                    <th scope="col">ATR</th>
+                    <th scope="col">1유닛</th>
+                    <th scope="col">검색당시가격</th>
+                    <th scope="col">현재가격</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2020.06.03 22:16:00</td>
+                    <td>삼성전자</td>
+                    <td>1,000,000</td>
+                    <td>5</td>
+                    <td>20,000</td>
+                    <td>54,500</td>
+                    <td>54,500</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

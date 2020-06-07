@@ -1,0 +1,101 @@
+
+document.getElementById('stdCodeName').value = '종목이름'
+document.getElementById("searchBtn").click();
+
+
+https://datamall.koscom.co.kr/kor/datamall/stock/popSearchStockCode.do#
+
+에서 코드값 검색하자
+if opition value 의 text가 '데이터가 없습니다.' 라면 alert 정확한 종목이름을 입력하세요
+
+
+https://finance.naver.com/item/main.nhn?code=005930
+코드값 검색해서 저뒤에다 붙이기
+https://datamall.koscom.co.kr/kor/datamall/stock/popSearchStockCode.do#
+-------------------------------------------------------------------
+https://m.stock.naver.com/api/item/getPriceDayList.nhn?code=005930&pageSize=20&page=1
+주식 api
+1. 네이버에서 증권데이터 이용 금지
+
+2. 대안 => 한국증권거래소 일자별시세검색에서 1개월 선택후 조회하여 크롤링
+http://marketdata.krx.co.kr/mdi#document=040204 일자별시세 주소
+
+주식종목검색기 input id = searchText
+document.getElementsByClassName('func-finder-searchInput')[0].id
+조회 id = class 명 btn-board btn-board-search
+document.getElementsByClassName('btn-board btn-board-search')[0].id
+종목 full코드 = document.getElementsByTagName('tr')[2].data.full_code
+종목 코드 = document.getElementsByTagName('tr')[2].data.short_code
+종목 이름 = document.getElementsByTagName('tr')[2].data.codeName
+obj = this
+
+
+종목검색 button id = finderbtn
+document.getElementsByClassName('func-btn-small func-btn-small-search')[0].id
+조회날짜 input from id = (월에서 한달뺌 1월일때만 12월로 갈수 있게 설정) fromdate
+document.getElementsByClassName('schdate')[0].id
+조회날짜 input to id = (당일 혹은 가장 마지막 거래일) todate
+document.getElementsByClassName('schdate')[1].id
+조회 버튼 id찾기 = class 명 btn-board btn-board-search
+document.getElementsByClassName('btn-board btn-board-search')[0].id
+
+document.getElementsByTagName('td')[8].textContent 날짜
+document.getElementsByTagName('td')[9].textContent 종가
+document.getElementsByTagName('td')[14].textContent 고가
+document.getElementsByTagName('td')[15].textContent 저가
+
+이후에는 +10씩 하면 그전날값나옴
+
+
+input hidden에 넣어야 값조회됨
+A005930
+삼성전자
+KR7005930003
+A005935
+삼성전자우
+KR7005931001
+full code =  isu_cd
+document.getElementsByName('isu_cd')[0].id
+이름 =  isu_nm
+document.getElementsByName('isu_nm')[0].id
+code = isu_srt_cd
+document.getElementsByName('isu_srt_cd')[0].id
+
+3. 크롤링으로 자 제일 큰문제 종목검색 text에 값넣고 조회날짜 fromtext에 to-1month 값 넣고
+   조회버튼을 클릭하는 이벤트까지 해야됨
+
+
+
+
+거쳐야하는 경로 순서
+<id값이 계속 변경되므로 name 값으로 해야함>
+=> NO id값 검색하는거 찾아서 했음
+1. 날짜 변경 
+##### 이게 안됨 #####
+2. 종목검색 버튼 클릭
+document.getElementById(document.getElementsByClassName('func-btn-small func-btn-small-search')[0].id).click()
+3. 검색 텍스트에 데이터입력
+document.getElementById(document.getElementsByClassName('func-finder-searchInput')[0].id).value = '삼성전자우'
+4. 조회버튼 클릭
+document.getElementById(document.getElementsByClassName('btn-board btn-board-search')[0].id).click()
+5. fullcode, 이름 , code값 크롤링
+종목 full코드 = document.getElementsByTagName('tr')[2].data.full_code
+종목 코드 = document.getElementsByTagName('tr')[2].data.short_code
+종목 이름 = document.getElementsByTagName('tr')[2].data.codeName
+6. hidden의 각각 값들 크롤링한걸로 변경
+document.getElementById(document.getElementsByName('isu_cd')[0].id).value = document.getElementsByTagName('tr')[2].data.full_code
+document.getElementById(document.getElementsByName('isu_srt_cd')[0].id).value = document.getElementsByTagName('tr')[2].data.short_code
+document.getElementById(document.getElementsByName('isu_nm')[0].id).value = document.getElementsByTagName('tr')[2].data.codeName
+7. 값이 들어갔으니 조회클릭
+document.getElementById(document.getElementsByClassName('btn-board btn-board-search')[1].id).click()
+8. 종가 시가 고가 당일을 제외한 20개 크롤링
+document.getElementsByTagName('td')[18].textContent 날짜
+document.getElementsByTagName('td')[19].textContent 종가
+document.getElementsByTagName('td')[24].textContent 고가
+document.getElementsByTagName('td')[25].textContent 저가
+....
+9. 당일 크롤링
+document.getElementsByTagName('td')[8].textContent 날짜
+document.getElementsByTagName('td')[9].textContent 종가
+document.getElementsByTagName('td')[14].textContent 고가
+document.getElementsByTagName('td')[15].textContent 저가
