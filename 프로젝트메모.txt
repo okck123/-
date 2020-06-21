@@ -64,6 +64,7 @@ document.getElementsByName('isu_srt_cd')[0].id
 3. 크롤링으로 자 제일 큰문제 종목검색 text에 값넣고 조회날짜 fromtext에 to-1month 값 넣고
    조회버튼을 클릭하는 이벤트까지 해야됨
 
+달력버튼 클릭 classname cal-btn-open
 
 
 
@@ -99,3 +100,28 @@ document.getElementsByTagName('td')[8].textContent 날짜
 document.getElementsByTagName('td')[9].textContent 종가
 document.getElementsByTagName('td')[14].textContent 고가
 document.getElementsByTagName('td')[15].textContent 저가
+
+
+
+============================================
+날짜 변경이 내 실력으로는 현재 불가능
+따라서 코드만 따오고 모바일 네이버 주식창에서 가격가져와서 해야함
+1. 종목검색 버튼 클릭
+document.getElementById(document.getElementsByClassName('func-btn-small func-btn-small-search')[0].id).click()
+2. 검색 텍스트에 데이터입력
+document.getElementById(document.getElementsByClassName('func-finder-searchInput')[0].id).value = '삼성전자우'
+3. 조회버튼 클릭
+document.getElementById(document.getElementsByClassName('btn-board btn-board-search')[0].id).click()
+4. code값 크롤링
+종목 코드 = document.getElementsByTagName('tr')[2].data.short_code
+5. code값으로 크롤링할 창 띄우기(code 뒤의값을 변경시켜주면 된다.)
+https://m.stock.naver.com/api/item/getPriceDayList.nhn?code=005930&pageSize=21&page=1
+CORS에 막혀서 api로 값 따올수가 없다.
+6. 크롤링할 값들 이름 정리
+dt : 날짜
+ncv : 종가
+hv : 고가
+lv : 저가
+7. 21개의 모든 데이터 크롤링해서 TR ATR 만들기
+8. 투자금과 곱해서 1유닛 만들기 원/주 로
+
