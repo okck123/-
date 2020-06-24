@@ -16,6 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -30,11 +31,28 @@
 
         //저장된 데이터 출력
         function tabledataview() {
-
+            
         }
-        //검색한 데이터 저장
-        function savedata() {
-
+        //유닛계산
+        function unitcal() {
+            let namecodeText = $('#namecode').val();
+            let investmentText = $('#investment').val();
+            $.ajax({
+                type: "POST",
+                url: "/search",
+                data: {
+                    namecode_give:namecodeText, investment_give:investmentText
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        let showunitwon = response['unitwon']
+                        let showunitshare = response['unitshare']
+                        document.getElementById("unitwon").value = showunitwon+'원'
+                        document.getElementById("unitshare").value = showunitshare+'주'
+                    }
+                }
+            })
         }
 
     </script>
@@ -71,7 +89,8 @@
         </div>
 
         <div class="input-group mb-3" id="codesearch">
-            <button class="btn btn-primary btn-lg" onclick="window.open('https:www.ktb.co.kr/trading/popup/itemPop.jspx','코드검색기','width = 390,height=550')"
+            <button class="btn btn-primary btn-lg"
+                onclick="window.open('https:www.ktb.co.kr/trading/popup/itemPop.jspx','코드검색기','width = 390,height=550')"
                 role="button">코드검색</a>
         </div>
 
@@ -86,15 +105,15 @@
             </div>
             <input type="text" class="form-control" id="investment" placeholder="1,000,000" aria-label="1,000,000"
                 aria-describedby="investment">
-            <button type="button" onclick="unitCalc()" class="btn btn-primary">결과확인</button>
+            <button type="button" onclick="unitcal()" class="btn btn-primary">결과확인</button>
         </div>
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="">1유닛[원/주]</span>
+                <span class="input-group-text" id="unitarea">1유닛[원/주]</span>
             </div>
-            <input type="text" class="form-control text-right" placeholder="원" aria-label="원"
+            <input type="text" class="form-control text-right" id="unitwon" placeholder="원" aria-label="원"
                 aria-describedby="basic-addon2">
-            <input type="text" class="form-control text-right" placeholder="주" aria-label="주"
+            <input type="text" class="form-control text-right" id="unitshare" placeholder="주" aria-label="주"
                 aria-describedby="basic-addon2">
         </div>
 
@@ -104,7 +123,6 @@
                     <th scope="col">날짜</th>
                     <th scope="col">종목이름/코드</th>
                     <th scope="col">투자금</th>
-                    <th scope="col">ATR</th>
                     <th scope="col">1유닛</th>
                     <th scope="col">검색당시가격</th>
                     <th scope="col">현재가격</th>
@@ -115,7 +133,6 @@
                     <td>2020.06.03 22:16:00</td>
                     <td>삼성전자</td>
                     <td>1,000,000</td>
-                    <td>5</td>
                     <td>20,000</td>
                     <td>54,500</td>
                     <td>54,500</td>
