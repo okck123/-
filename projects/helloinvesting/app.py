@@ -22,16 +22,44 @@ def maxnum(a,b):
 def todayATRcalc(yesterdayATR,todayTR):
     return(yesterdayATR*16 + todayTR*2)/18
 
-
+def todayunitcalc(investment,todayATR):
+    return(investment*0.01)/todayATR
 
 # HTML을 주는 부분
 @app.route('/')
 def home():
    return render_template('index.html')
 
+@app.route('/view',methods=['GET'])
+def viewdata():
+    datas = list(db.helloinvestment.find({},{'_id':0}))
+    #현재가격을 가지고있는 리스트를 보내주자 어차피 순번은 같다.
+    #datas의 name에 있는 코드를 가져와서 현재가격만 크롤링 하여 리스트에 저장후 해당 리스트를 클라이언트에 반환
+    #최상단 종가가 현재가격 (계속 변동됨 주식시장 개장때는)
+    nowprices = []
+    for i in range(0,len(datas)):
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1920x1080')
+        options.add_argument("disable-gpu")
+        options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+
+        driver = webdriver.Chrome('chromedriver',options=options)
+        namecode = datas[i]['name']
+        index = namecode.find('/') + 1
+        namecode = namecode[index:]
+        url = 'https://m.stock.naver.com/item/main.nhn#/stocks/' + namecode + '/price'
+        driver.get(url)
+        time.sleep(2)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        finddata = soup.find("tr",{"data-index":0}).text.split()
+        nowprices.append(int(finddata[1].replace(",","")))
+        driver.quit()
+    return jsonify({'result': 'success','datas':datas,'nowprices':nowprices})
+
 @app.route('/search', methods=['POST'])
 def unitcalc():
-        ### option 적용 ###
+    ### option 적용 ###
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('window-size=1920x1080')
@@ -111,18 +139,18 @@ def unitcalc():
     #당일 ATR
     todayATR = todayATRcalc(yesterdayATR,tr_list[17])
     
-    unit = (investment_receive*0.01)/todayATR
-    roundunit = round(unit)
+    unit = todayunitcalc(investment_receive,todayATR)
+    unitshare = round(unit)
+    unitwon = unitshare*ncv_list[18]
     
-    print(roundunit,ncv_list[18]*roundunit)
+    print(unitshare,unitwon)
     
     driver.quit()
 
     resultcodename = findcodename +"/"+ namecode_receive
-    resultunit = str(ncv_list[18]*roundunit) + "/" + str(roundunit)
-    #날짜 종목이름/코드 투자금 1유닛 검색당시가격
+    resultunit = str(unitwon) + "/" + str(unitshare)
+
     doc = {
-        #날짜에러있음
         'date' : datetime.today().strftime("%Y.%m.%d %H:%M:%S"),
         'name' : resultcodename,
         'investment' : investment_receive,
@@ -131,7 +159,7 @@ def unitcalc():
     }
 
     db.helloinvestment.insert_one(doc)
-    return jsonify({'result': 'success', 'msg': '계산 완료!','unitshare':roundunit,'unitwon':ncv_list[18]*roundunit})
+    return jsonify({'result': 'success', 'msg': '계산 완료!','unitshare':unitshare,'unitwon':unitwon})
 
 if __name__ == '__main__':
    app.run('0.0.0.0',port=5000,debug=True)

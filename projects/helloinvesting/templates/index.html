@@ -24,14 +24,40 @@
     <title>당신의 투자금은 안녕하십니까?</title>
 
     <script>
-
         $(document).ready(function () {
             tabledataview();
         });
 
         //저장된 데이터 출력
         function tabledataview() {
-            
+            $.ajax({
+                type: "GET",
+                url: "/view",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let datas = response['datas']
+                        let nowprices = response['nowprices']
+                        for (let i = 0; i < datas.length; i++) {
+                            make_table(datas[i]['date'], datas[i]['name'], datas[i]['investment'], datas[i]['unit'], datas[i]['searchprice'], nowprices[i])
+                        }
+                    }
+                    else {
+                        //alert('저장된 데이터가 없습니다.')
+                    }
+                }
+            })
+        }
+        function make_table(date, name, investment, unit, searchprice, nowprice) {
+            let temp_html = `<tr>
+                                <td>${date}</td>
+                                <td>${name}</td>
+                                <td>${investment}</td>
+                                <td>${unit}</td>
+                                <td>${searchprice}</td>
+                                <td>${nowprice}</td>
+                            </tr>`
+            $('#write_data').append(temp_html);
         }
         //유닛계산
         function unitcal() {
@@ -41,27 +67,25 @@
                 type: "POST",
                 url: "/search",
                 data: {
-                    namecode_give:namecodeText, investment_give:investmentText
+                    namecode_give: namecodeText, investment_give: investmentText
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert(response['msg']);
                         let showunitwon = response['unitwon']
                         let showunitshare = response['unitshare']
-                        document.getElementById("unitwon").value = showunitwon+'원'
-                        document.getElementById("unitshare").value = showunitshare+'주'
+                        document.getElementById("unitwon").value = showunitwon + '원'
+                        document.getElementById("unitshare").value = showunitshare + '주'
                     }
                 }
             })
         }
-
     </script>
     <style>
-        .wrap {
-            width: 900px;
-            margin: auto;
-        }
 
+        #linkbutton{
+            margin-top: 300px;
+        }
         #table {
             text-align: center;
         }
@@ -76,69 +100,88 @@
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-                <h1 class="display-4 text-center">당신의 투자금은 안녕하십니까?</h1>
-                <hr class="my-4">
-                <p class="lead text-left">적절한 투자금 분배는 당신의 투자에 도움이 됩니다.</p>
-                <p class="lead text-left">종목과 투자금만 입력하세요!</p>
-                <p class="lead text-left">해당 종목의 1회당 적정 거래량을 자동으로 계산해 드립니다.</p>
-                <p class="lead text-left">코드검색을 위해 코드검색 버튼을 눌러주세요</p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar" id="linkbutton">
+                <div class="btn-group-vertical" role="group" aria-label="link-button-group">
+                    <button class="btn btn-primary btn-lg" onclick="window.open('https://finance.naver.com/')"
+                        role="button" style="background: none; border:none"><img
+                            src="{{ url_for('static', filename='naver.png') }}" /></button>
+                    <button class="btn btn-primary btn-lg" onclick="window.open('https://www.kiwoom.com/')"
+                        role="button" style="background: none; border:none"><img
+                            src="{{ url_for('static', filename='kiwoom.png') }}" /></button>
+                    <button class="btn btn-primary btn-lg" onclick="window.open('https://www.samsungpop.com/')"
+                        role="button" style="background: none; border:none"><img
+                            src="{{ url_for('static', filename='samsung.png') }}" /></button>
+                    <button class="btn btn-primary btn-lg" onclick="window.open('https://www.kbsec.com/go.able')"
+                        role="button" style="background: none; border:none"><img
+                            src="{{ url_for('static', filename='kb.png') }}" /></button>
+                    <button class="btn btn-primary btn-lg"
+                        onclick="window.open('https://www.shinhaninvest.com/index.html')" role="button"
+                        style="background: none; border:none"><img
+                            src="{{ url_for('static', filename='shinhan.png') }}" /></button>
+                    <button class="btn btn-primary btn-lg" onclick="window.open('https://kr.investing.com/')"
+                        role="button" style="background: none; border:none"><img
+                            src="{{ url_for('static', filename='investing.png') }}" /></button>
+                </div>
             </div>
-        </div>
+            <div class="col-sm-9 ">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                        <h1 class="display-4 text-center">당신의 투자금은 안녕하십니까?</h1>
+                        <hr class="my-4">
+                        <p class="lead text-left">적절한 투자금 분배는 당신의 투자에 도움이 됩니다.</p>
+                        <p class="lead text-left">종목과 투자금만 입력하세요!</p>
+                        <p class="lead text-left">해당 종목의 1회당 적정 거래량을 자동으로 계산해 드립니다.</p>
+                        <p class="lead text-left">코드검색을 위해 코드검색 버튼을 눌러주세요</p>
+                    </div>
+                </div>
 
-        <div class="input-group mb-3" id="codesearch">
-            <button class="btn btn-primary btn-lg"
-                onclick="window.open('https:www.ktb.co.kr/trading/popup/itemPop.jspx','코드검색기','width = 390,height=550')"
-                role="button">코드검색</a>
-        </div>
+                <div class="input-group mb-3" id="codesearch">
+                    <button class="btn btn-default btn-lg"
+                        onclick="window.open('https:www.ktb.co.kr/trading/popup/itemPop.jspx','코드검색기','width = 390,height=550')"
+                        role="button">코드검색</button>
+                </div>
 
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">종목코드</span>
-            </div>
-            <input type="text" class="form-control" id="namecode" placeholder="005930" aria-label="005930"
-                aria-describedby="namecode">
-            <div class="input-group-prepend">
-                <span class="input-group-text">투자금</span>
-            </div>
-            <input type="text" class="form-control" id="investment" placeholder="1,000,000" aria-label="1,000,000"
-                aria-describedby="investment">
-            <button type="button" onclick="unitcal()" class="btn btn-primary">결과확인</button>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="unitarea">1유닛[원/주]</span>
-            </div>
-            <input type="text" class="form-control text-right" id="unitwon" placeholder="원" aria-label="원"
-                aria-describedby="basic-addon2">
-            <input type="text" class="form-control text-right" id="unitshare" placeholder="주" aria-label="주"
-                aria-describedby="basic-addon2">
-        </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">종목코드</span>
+                    </div>
+                    <input type="text" class="form-control" id="namecode" placeholder="ex)005930(삼성전자)"
+                        aria-label="005930" aria-describedby="namecode">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">투자금</span>
+                    </div>
+                    <input type="text" class="form-control" id="investment" placeholder="ex)1000000"
+                        aria-label="1,000,000" aria-describedby="investment">
+                    <button type="button" onclick="unitcal()" class="btn btn-default">결과확인</button>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="unitarea">1유닛[원/주]</span>
+                    </div>
+                    <input type="text" class="form-control text-right" id="unitwon" placeholder="원" aria-label="원"
+                        aria-describedby="basic-addon2">
+                    <input type="text" class="form-control text-right" id="unitshare" placeholder="주" aria-label="주"
+                        aria-describedby="basic-addon2">
+                </div>
 
-        <table class="table" id="table">
-            <thead>
-                <tr>
-                    <th scope="col">날짜</th>
-                    <th scope="col">종목이름/코드</th>
-                    <th scope="col">투자금</th>
-                    <th scope="col">1유닛</th>
-                    <th scope="col">검색당시가격</th>
-                    <th scope="col">현재가격</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>2020.06.03 22:16:00</td>
-                    <td>삼성전자</td>
-                    <td>1,000,000</td>
-                    <td>20,000</td>
-                    <td>54,500</td>
-                    <td>54,500</td>
-                </tr>
-            </tbody>
-        </table>
+                <table class="table" id="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">날짜</th>
+                            <th scope="col">종목이름/코드</th>
+                            <th scope="col">투자금</th>
+                            <th scope="col">1유닛</th>
+                            <th scope="col">검색당시가격</th>
+                            <th scope="col">현재가격</th>
+                        </tr>
+                    </thead>
+                    <tbody id="write_data">
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </body>
