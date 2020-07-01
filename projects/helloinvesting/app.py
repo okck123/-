@@ -11,6 +11,7 @@ client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑
 db = client.dbsparta                      # 'dbsparta'라는 이름의 db를 만듭니다.
 
 import time
+import requests
 
 
 def maxnum(a,b):
@@ -25,6 +26,15 @@ def todayATRcalc(yesterdayATR,todayTR):
 def todayunitcalc(investment,todayATR):
     return(investment*0.01)/todayATR
 
+
+### option 적용 ###
+options = webdriver.ChromeOptions()
+options.add_argument('headless')
+options.add_argument('window-size=1920x1080')
+options.add_argument("disable-gpu")
+options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
+###################
+
 # HTML을 주는 부분
 @app.route('/')
 def home():
@@ -37,34 +47,22 @@ def viewdata():
     #datas의 name에 있는 코드를 가져와서 현재가격만 크롤링 하여 리스트에 저장후 해당 리스트를 클라이언트에 반환
     #최상단 종가가 현재가격 (계속 변동됨 주식시장 개장때는)
     nowprices = []
-    for i in range(0,len(datas)):
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1920x1080')
-        options.add_argument("disable-gpu")
-        options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
 
-        driver = webdriver.Chrome('chromedriver',options=options)
-        namecode = datas[i]['name']
-        index = namecode.find('/') + 1
-        namecode = namecode[index:]
-        url = 'https://m.stock.naver.com/item/main.nhn#/stocks/' + namecode + '/price'
+    driver = webdriver.Chrome('chromedriver',options=options)
+    for i in range(0,len(datas)):
+        url = datas[i]['url']
         driver.get(url)
-        time.sleep(2)
+        time.sleep(0.3)
         soup = BeautifulSoup(driver.page_source, 'html.parser')
-        finddata = soup.find("tr",{"data-index":0}).text.split()
-        nowprices.append(int(finddata[1].replace(",","")))
-        driver.quit()
+        current_price = soup.select_one('#header > div.end_header_topinfo > div.flick-container.major_info_wrp > div > div:nth-child(2) > div > div.stock_wrp > div.price_wrp > strong').text
+        #print(current_price)
+        nowprices.append(current_price.replace(",",""))
+    
+    driver.quit()
     return jsonify({'result': 'success','datas':datas,'nowprices':nowprices})
 
 @app.route('/search', methods=['POST'])
 def unitcalc():
-    ### option 적용 ###
-    options = webdriver.ChromeOptions()
-    options.add_argument('headless')
-    options.add_argument('window-size=1920x1080')
-    options.add_argument("disable-gpu")
-    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36")
 
     driver = webdriver.Chrome('chromedriver',options=options)
     ##################
@@ -81,7 +79,7 @@ def unitcalc():
     driver.get(url)
 
     # 정보를 받아오기까지 2초를 잠시 기다립니다.
-    time.sleep(2)
+    time.sleep(0.3)
 
     # 크롬에서 HTML 정보를 가져오고 BeautifulSoup을 통해 검색하기 쉽도록 가공합니다.
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -143,7 +141,7 @@ def unitcalc():
     unitshare = round(unit)
     unitwon = unitshare*ncv_list[18]
     
-    print(unitshare,unitwon)
+    #print(unitshare,unitwon)
     
     driver.quit()
 
@@ -155,7 +153,8 @@ def unitcalc():
         'name' : resultcodename,
         'investment' : investment_receive,
         'unit' : resultunit,
-        'searchprice' : ncv_list[18]
+        'searchprice' : ncv_list[18],
+        'url' : url
     }
 
     db.helloinvestment.insert_one(doc)
