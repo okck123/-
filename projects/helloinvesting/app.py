@@ -13,6 +13,13 @@ db = client.dbsparta                      # 'dbsparta'라는 이름의 db를 만
 import time
 import requests
 
+from pytz import timezone
+from datetime import datetime
+ 
+
+
+
+
 
 def maxnum(a,b):
     if(a>b):
@@ -147,9 +154,10 @@ def unitcalc():
 
     resultcodename = findcodename +"/"+ namecode_receive
     resultunit = str(unitwon) + "/" + str(unitshare)
-
+    fmt = "%Y-%m-%d %H:%M:%S"
+    KST = datetime.now(timezone('Asia/Seoul'))
     doc = {
-        'date' : datetime.today().strftime("%Y.%m.%d %H:%M:%S"),
+        'date' : KST.strftime(fmt),
         'name' : resultcodename,
         'investment' : investment_receive,
         'unit' : resultunit,

@@ -1,7 +1,6 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
-from time import gmtime, strftime
 
 from flask import Flask, render_template, jsonify, request
 app = Flask(__name__)
@@ -10,8 +9,10 @@ from pymongo import MongoClient           # pymongo를 임포트 하기(패키�
 client = MongoClient('mongodb://test:test@localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다. ec2까지
 db = client.dbsparta                      # 'dbsparta'라는 이름의 db를 만듭니다.
 
-import time
 import requests
+
+from pytz import timezone
+from datetime import datetime
 
 
 def maxnum(a,b):
@@ -146,9 +147,12 @@ def unitcalc():
 
     resultcodename = findcodename +"/"+ namecode_receive
     resultunit = str(unitwon) + "/" + str(unitshare)
+    
+    fmt = "%Y-%m-%d %H:%M:%S"
+    KST = datetime.now(timezone('Asia/Seoul'))
 
     doc = {
-        'date' : datetime.today().strftime("%Y.%m.%d %H:%M:%S"),
+        'date' : KST.strftime(fmt),
         'name' : resultcodename,
         'investment' : investment_receive,
         'unit' : resultunit,

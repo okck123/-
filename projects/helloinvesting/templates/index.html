@@ -6,6 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <meta property="og:title" content="당신의 투자금은 안녕하십니까?" />
+    <meta property="og:description" content="적절한 투자금 분배는 당신의 투자에 도움이 됩니다." />
+    <meta property="og:image" content="{{ url_for('static', filename='investing.jpg') }}" />
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -20,6 +24,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
 
     <title>당신의 투자금은 안녕하십니까?</title>
 
@@ -82,8 +89,14 @@
         }
     </script>
     <style>
+        * {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
         #linkbutton {
-            margin-top: 300px;
+            margin-top: 85px;
+            padding: 70px;
+            
         }
 
         #table {
@@ -104,25 +117,17 @@
         <div class="row">
             <div class="col-sm-3 col-md-2 sidebar" id="linkbutton">
                 <div class="btn-group-vertical" role="group" aria-label="link-button-group">
-                    <button class="btn btn-primary btn-lg" onclick="window.open('https://finance.naver.com/')"
-                        role="button" style="background: none; border:none"><img
-                            src="{{ url_for('static', filename='naver.png') }}" /></button>
-                    <button class="btn btn-primary btn-lg" onclick="window.open('https://www.kiwoom.com/')"
-                        role="button" style="background: none; border:none"><img
-                            src="{{ url_for('static', filename='kiwoom.png') }}" /></button>
-                    <button class="btn btn-primary btn-lg" onclick="window.open('https://www.samsungpop.com/')"
-                        role="button" style="background: none; border:none"><img
-                            src="{{ url_for('static', filename='samsung.png') }}" /></button>
-                    <button class="btn btn-primary btn-lg" onclick="window.open('https://www.kbsec.com/go.able')"
-                        role="button" style="background: none; border:none"><img
-                            src="{{ url_for('static', filename='kb.png') }}" /></button>
-                    <button class="btn btn-primary btn-lg"
-                        onclick="window.open('https://www.shinhaninvest.com/index.html')" role="button"
-                        style="background: none; border:none"><img
-                            src="{{ url_for('static', filename='shinhan.png') }}" /></button>
-                    <button class="btn btn-primary btn-lg" onclick="window.open('https://kr.investing.com/')"
-                        role="button" style="background: none; border:none"><img
-                            src="{{ url_for('static', filename='investing.png') }}" /></button>
+                    <input type='image' src="/static/naver.PNG" onclick="window.open('https://finance.naver.com/')"></input>
+                    <p></p>
+                    <input type='image' src="/static/kiwoom.PNG" onclick="window.open('https://finance.naver.com/')"></input>
+                    <p></p>
+                    <input type='image' src="/static/samsung.PNG" onclick="window.open('https://finance.naver.com/')"></input>
+                    <p></p>
+                    <input type='image' src="/static/kb.PNG" onclick="window.open('https://finance.naver.com/')"></input>
+                    <p></p>
+                    <input type='image' src="/static/shinhan.PNG" onclick="window.open('https://finance.naver.com/')"></input>
+                    <p></p>
+                    <input type='image' src="/static/investing.PNG" onclick="window.open('https://finance.naver.com/')"></input>
                 </div>
             </div>
             <div class="col-sm-9 ">
